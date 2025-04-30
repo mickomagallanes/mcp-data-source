@@ -24,3 +24,5 @@ Data that we fetch, that the LLM (MCP Client) could analyze:
 16. DXY / USD Index
 17. Whale wallet tracking
 18. CEX vs DEX volume ratio
+19. Liquidity heatmap
+20. ISM chart tracks
