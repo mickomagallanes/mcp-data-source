@@ -52,11 +52,24 @@ export async function fetchMultiTimeframeOHLCV(
       getMacdByOhlcv(ohlcvData, timeframe.tf),
     ];
 
+    /**
+     * structure:
+       {
+        timestamp: 1737331200000,
+        open: 2.9575,
+        high: 3.3715,
+        low: 2.9071,
+        close: 3.1052,
+        volume: 132340657.84939,
+        'macd-12-26-9': -0.0749437916600022,
+        'signal-12-26-9': -0.06977646440043456,
+        'histogram-12-26-9': -0.0051673272595676445
+       }
+     */
     const enhancedOhlcv = ohlcvData.map((_, index) =>
       Object.assign({}, ...enhancedOhlcvArr.map((arr) => arr[index]))
     );
 
-    console.log(enhancedOhlcv);
     data.push({ timeframe: timeframe.tf, ohlcv: enhancedOhlcv });
   }
 
