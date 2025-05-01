@@ -1,5 +1,13 @@
 import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD";
 
+export interface MainData {
+  ohlcvByTimeframe: OHLCVTimeframeDataType[];
+  cryptoFearAndGreedIndex: {
+    value: number;
+    classification: string;
+    timestamp: string;
+  };
+}
 export interface OHLCVTimeframeDataType {
   timeframe: string;
   ohlcv: OHLCVType[];

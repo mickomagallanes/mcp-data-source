@@ -64,6 +64,9 @@ export async function fetchMultiTimeframeOHLCV(
         'macd-12-26-9': -0.0749437916600022,
         'signal-12-26-9': -0.06977646440043456,
         'histogram-12-26-9': -0.0051673272595676445
+         'macd-3-13-6': -0.0004545282869830025,
+        'signal-3-13-6': 0.01419077640971805,
+        'histogram-3-13-6': -0.014645304696701052
        }
      */
     const enhancedOhlcv = ohlcvData.map((_, index) =>
