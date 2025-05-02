@@ -1,4 +1,4 @@
-import { MACDLengthType } from "./types/price.type";
+import { MACDLengthType } from "./types/price.type.js";
 
 export const EXCHANGE = "okx";
 export const OHLCV_TIMEFRAME_SETTINGS = [

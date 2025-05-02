@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { getMainData } from "./src/fetchers/mainData";
+import { getMainData } from "./fetchers/mainData.js";
 
 const server = new McpServer({ name: "MCP Server", version: "1.0.0" });
 

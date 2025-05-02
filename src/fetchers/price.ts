@@ -1,11 +1,11 @@
 import ccxt from "ccxt";
-import { OHLCV_TIMEFRAME_SETTINGS } from "../const";
+import { OHLCV_TIMEFRAME_SETTINGS } from "../const.js";
 import {
   EnhancedOHLCVData,
   OHLCVTimeframeDataType,
   OHLCVType,
-} from "../types/price.type";
-import { getMacdByOhlcv } from "./indicators";
+} from "../types/price.type.js";
+import { getMacdByOhlcv } from "./indicators.js";
 
 export async function fetchOHLCV(
   symbol: string,

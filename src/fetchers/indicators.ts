@@ -1,5 +1,5 @@
-import { calculateMACD } from "../helpers";
-import { OHLCVType } from "../types/price.type";
+import { calculateMACD } from "../helpers.js";
+import { OHLCVType } from "../types/price.type.js";
 
 export function getMacdByOhlcv(ohlcv: OHLCVType[], currentTf: string) {
   const macdArrObj = calculateMACD(ohlcv, currentTf);

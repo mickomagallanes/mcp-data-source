@@ -1,4 +1,4 @@
-import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD";
+import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD.js";
 
 export interface MainData {
   ohlcvByTimeframe: OHLCVTimeframeDataType[];

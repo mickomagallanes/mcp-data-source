@@ -1,5 +1,3 @@
-import * as cheerio from "cheerio";
-
 export async function getCryptoFearGreedIndex() {
   try {
     const response = await fetch("https://api.alternative.me/fng/");

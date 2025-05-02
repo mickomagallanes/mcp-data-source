@@ -1,6 +1,6 @@
 import { MACD } from "technicalindicators";
-import { CalculateMACDReturnType, OHLCVType } from "./types/price.type";
-import { MACD_LENGTHS } from "./const";
+import { CalculateMACDReturnType, OHLCVType } from "./types/price.type.js";
+import { MACD_LENGTHS } from "./const.js";
 
 export function calculateMACD(ohlcv: OHLCVType[], currentTf: string) {
   let resultArr: CalculateMACDReturnType[] = [];
