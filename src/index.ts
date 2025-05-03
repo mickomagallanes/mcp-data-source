@@ -1,14 +1,15 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { getMainData } from "./fetchers/mainData.js";
+import { z } from "zod";
 
 const server = new McpServer({ name: "MCP Server", version: "1.0.0" });
 
-server.resource("market", "api://market", async (uri) => {
+server.tool("get-xrp-data", {}, async () => {
   const response = await getMainData();
 
   return {
-    contents: [{ uri: uri.href, type: "text", text: JSON.stringify(response) }],
+    content: [{ type: "text", text: JSON.stringify(response) }],
   };
 });
 
