@@ -1,6 +1,6 @@
 # mcp-data-source
 
-API service for the MCP trading software. This fetches multiple data sources that the MCP server utilizes. 
+This is now the actual MCP server that fetches
 
 The trading bot could also utilize this API, though we preferably choose to directly utilize `ccxt` there to reduce the process.
 
