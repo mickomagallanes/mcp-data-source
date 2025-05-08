@@ -29,6 +29,21 @@ export interface MACDLengthType {
   tfs: string[];
 }
 
+export interface RSIPeriodType {
+  period: number;
+  tfs: string[];
+}
+
+export interface SMAPeriodType {
+  period: number;
+  tfs: string[];
+}
+
+export interface EMAPeriodType {
+  period: number;
+  tfs: string[];
+}
+
 export type CalculateMACDReturnType = Pick<
   MACDLengthType,
   "shortEMA" | "longEMA" | "signalLine"

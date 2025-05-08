@@ -5,15 +5,21 @@ import { z } from "zod";
 
 const server = new McpServer({ name: "MCP Server", version: "1.0.0" });
 
-server.tool("get-xrp-data", {}, async () => {
-  const response = await getMainData();
+server.tool(
+  "get-crypto-data",
+  { asset: z.string().describe("CCXT Trading Pair (e.g.: XRP/USDT") },
+  async ({ asset }) => {
+    const response = await getMainData(asset);
 
-  return {
-    content: [{ type: "text", text: JSON.stringify(response) }],
-  };
-});
+    return {
+      content: [{ type: "text", text: JSON.stringify(response) }],
+    };
+  }
+);
 
 async function main() {
+  // const response = await getMainData("XRP/USDT");
+
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error("MCP Server running on stdio");

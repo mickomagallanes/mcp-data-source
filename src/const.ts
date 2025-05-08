@@ -1,35 +1,32 @@
-import { MACDLengthType } from "./types/price.type.js";
+import {
+  EMAPeriodType,
+  MACDLengthType,
+  RSIPeriodType,
+  SMAPeriodType,
+} from "./types/price.type.js";
 
 export const EXCHANGE = "okx";
 export const OHLCV_TIMEFRAME_SETTINGS = [
-  // {
-  //   tf: "1m",
-  //   candles: 2000,
-  // },
-  // {
-  //   tf: "5m",
-  //   candles: 1500,
-  // },
-  // {
-  //   tf: "15m",
-  //   candles: 1000,
-  // },
-  // {
-  //   tf: "30m",
-  //   candles: 900,
-  // },
+  {
+    tf: "15m",
+    candles: 40, // 10 hours
+    candlesForOffset: 250, // get much data to calculate indicators for the real candles
+  },
   {
     tf: "1h",
-    candles: 30,
+    candles: 48, // 2 days
+    candlesForOffset: 250,
   },
   {
     tf: "4h",
-    candles: 27,
+    candles: 20, // 80 hours
+    candlesForOffset: 250,
   },
-  // {
-  //   tf: "1d",
-  //   candles: 200,
-  // },
+  {
+    tf: "1d",
+    candles: 10, // 2 weeks
+    candlesForOffset: 250,
+  },
 ];
 
 export const MACD_LENGTHS: MACDLengthType[] = [
@@ -37,7 +34,7 @@ export const MACD_LENGTHS: MACDLengthType[] = [
     shortEMA: 12,
     longEMA: 26,
     signalLine: 9,
-    tfs: ["30m", "1h", "4h", "1d"],
+    tfs: ["15m", "1h", "4h", "1d"],
   },
   // {
   //   shortEMA: 5,
@@ -45,4 +42,41 @@ export const MACD_LENGTHS: MACDLengthType[] = [
   //   signalLine: 6,
   //   tfs: ["4h"],
   // },
+];
+
+export const RSI_PERIODS: RSIPeriodType[] = [
+  {
+    period: 14,
+    tfs: ["15m", "1h", "4h", "1d"],
+  },
+];
+
+export const SMA_PERIODS: SMAPeriodType[] = [
+  {
+    period: 50,
+    tfs: ["15m", "1h", "4h", "1d"],
+  },
+  {
+    period: 100,
+    tfs: ["1h", "4h", "1d"],
+  },
+  {
+    period: 200,
+    tfs: ["1h", "4h", "1d"],
+  },
+];
+
+export const EMA_PERIODS: EMAPeriodType[] = [
+  {
+    period: 12,
+    tfs: ["15m"],
+  },
+  {
+    period: 26,
+    tfs: ["15m"],
+  },
+  {
+    period: 20,
+    tfs: ["1h", "4h", "1d"],
+  },
 ];

@@ -5,7 +5,12 @@ import {
   OHLCVTimeframeDataType,
   OHLCVType,
 } from "../types/price.type.js";
-import { getMacdByOhlcv } from "./indicators.js";
+import {
+  getEmaByOhlcv,
+  getMacdByOhlcv,
+  getRsiByOhlcv,
+  getSmaByOhlcv,
+} from "./indicators.js";
 
 export async function fetchOHLCV(
   symbol: string,
@@ -44,12 +49,15 @@ export async function fetchMultiTimeframeOHLCV(
       symbol,
       timeframe.tf,
       undefined,
-      timeframe.candles
+      timeframe.candlesForOffset
     );
 
-    const enhancedOhlcvArr: EnhancedOHLCVData[] = [
+    const aggregatedData = [
       JSON.parse(JSON.stringify(ohlcvData)),
       getMacdByOhlcv(ohlcvData, timeframe.tf),
+      getRsiByOhlcv(ohlcvData, timeframe.tf),
+      getSmaByOhlcv(ohlcvData, timeframe.tf),
+      getEmaByOhlcv(ohlcvData, timeframe.tf),
     ];
 
     /**
@@ -69,9 +77,11 @@ export async function fetchMultiTimeframeOHLCV(
         'histogram-3-13-6': -0.014645304696701052
        }
      */
-    const enhancedOhlcv = ohlcvData.map((_, index) =>
-      Object.assign({}, ...enhancedOhlcvArr.map((arr) => arr[index]))
-    );
+    const enhancedOhlcv: EnhancedOHLCVData[] = ohlcvData
+      .map((_, index) =>
+        Object.assign({}, ...aggregatedData.map((arr) => arr[index]))
+      )
+      .slice(-timeframe.candles); // only take the real candles quantity
 
     data.push({ timeframe: timeframe.tf, ohlcv: enhancedOhlcv });
   }
