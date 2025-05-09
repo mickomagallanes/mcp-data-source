@@ -1,11 +1,19 @@
-import { EMA, MACD, RSI, SMA } from "technicalindicators";
-import { CalculateMACDReturnType, OHLCVType } from "./types/price.type.js";
+import { BollingerBands, EMA, MACD, RSI, SMA } from "technicalindicators";
+import { OHLCVType } from "./types/price.type.js";
 import {
+  BB_PERIODS,
   EMA_PERIODS,
   MACD_LENGTHS,
   RSI_PERIODS,
   SMA_PERIODS,
 } from "./const.js";
+import { CalculateMACDReturnType } from "./types/indicators.type.js";
+
+export function roundToDecimals(value: number, decimals: number): number {
+  if (!isFinite(value)) return value;
+  const factor = Math.pow(10, decimals);
+  return Math.round(value * factor) / factor;
+}
 
 export function calculateMACD(ohlcv: OHLCVType[], currentTf: string) {
   let resultArr: CalculateMACDReturnType[] = [];
@@ -145,6 +153,43 @@ export function calculateEma(ohlcv: OHLCVType[], currentTf: string) {
       const resultObj = {
         data: emaResult,
         period: emaPeriod.period,
+      };
+      resultArr.push(resultObj);
+    }
+  }
+
+  return resultArr;
+}
+
+export function calculateBoll(ohlcv: OHLCVType[], currentTf: string) {
+  let resultArr = [];
+
+  for (let bbPeriod of BB_PERIODS) {
+    // adjust to the candlesticks settings of Bollinger Bands
+    const closes = ohlcv.map((c) => c.close);
+
+    // because I dont expect this to be empty
+    if (!closes.length && !closes.every((cl) => typeof cl === "number")) {
+      throw new Error(
+        `❌ Closed prices array supplied to calculate the Bollinger Bands is 
+          either empty or contains a non-number`
+      );
+    }
+
+    // if currentTf is not in corresponding tfs, then skip
+    if (bbPeriod.tfs.includes(currentTf)) {
+      const bbInput = {
+        values: closes,
+        period: bbPeriod.period,
+        stdDev: bbPeriod.stdDev,
+      };
+
+      const bbResult = BollingerBands.calculate(bbInput);
+
+      const resultObj = {
+        data: bbResult,
+        period: bbPeriod.period,
+        stdDev: bbPeriod.stdDev,
       };
       resultArr.push(resultObj);
     }

@@ -4,13 +4,20 @@ import {
   EnhancedOHLCVData,
   OHLCVTimeframeDataType,
   OHLCVType,
+  TickerObjectType,
 } from "../types/price.type.js";
 import {
+  getBollByOhlcv,
   getEmaByOhlcv,
   getMacdByOhlcv,
   getRsiByOhlcv,
   getSmaByOhlcv,
 } from "./indicators.js";
+import { roundToDecimals } from "../helpers.js";
+
+const exchange = new ccxt.okx({
+  enableRateLimit: true,
+}); // any exchange since this is public API
 
 export async function fetchOHLCV(
   symbol: string,
@@ -19,10 +26,6 @@ export async function fetchOHLCV(
   limit?: number
 ): Promise<OHLCVType[]> {
   try {
-    const exchange = new ccxt.okx({
-      enableRateLimit: true,
-    }); // any exchange since this is public API
-
     const ohlcv = await exchange.fetchOHLCV(symbol, timeframe, since, limit);
 
     return ohlcv.map((candle) => ({
@@ -31,7 +34,7 @@ export async function fetchOHLCV(
       high: Number(candle[2]) || 0,
       low: Number(candle[3]) || 0,
       close: Number(candle[4]) || 0,
-      volume: Number(candle[5]) || 0,
+      volume: roundToDecimals(Number(candle[5]), 2) || 0,
     }));
   } catch (error) {
     console.error(`Error fetching OHLCV data:`, error);
@@ -58,6 +61,7 @@ export async function fetchMultiTimeframeOHLCV(
       getRsiByOhlcv(ohlcvData, timeframe.tf),
       getSmaByOhlcv(ohlcvData, timeframe.tf),
       getEmaByOhlcv(ohlcvData, timeframe.tf),
+      getBollByOhlcv(ohlcvData, timeframe.tf),
     ];
 
     /**
@@ -87,4 +91,21 @@ export async function fetchMultiTimeframeOHLCV(
   }
 
   return data;
+}
+
+export async function fetchTicker(symbol: string): Promise<TickerObjectType> {
+  try {
+    const tickerData = await exchange.fetchTicker(symbol);
+
+    return {
+      baseVolume: `${roundToDecimals(tickerData.baseVolume ?? 0, 2)}`,
+      quoteVolume: `${roundToDecimals(tickerData.quoteVolume ?? 0, 2)}`,
+      lastPrice: `${tickerData.last}`,
+      vwap: `${roundToDecimals(tickerData.vwap ?? 0, 6)}`,
+      timestamp: `${tickerData.timestamp}`,
+    };
+  } catch (error) {
+    console.error(`Error fetching Ticker data:`, error);
+    throw error;
+  }
 }

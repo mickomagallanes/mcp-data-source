@@ -1,8 +1,10 @@
 import {
+  calculateBoll,
   calculateEma,
   calculateMACD,
   calculateRsi,
   calculateSma,
+  roundToDecimals,
 } from "../helpers.js";
 import { OHLCVType } from "../types/price.type.js";
 
@@ -47,9 +49,18 @@ export function getMacdByOhlcv(ohlcv: OHLCVType[], currentTf: string) {
          */
         const macdData = macdVal.data[macdDataCount];
 
-        macdByLength[indx][`macd-${lengthName}`] = macdData.MACD;
-        macdByLength[indx][`signal-${lengthName}`] = macdData.signal;
-        macdByLength[indx][`histogram-${lengthName}`] = macdData.histogram;
+        macdByLength[indx][`macd-${lengthName}`] = roundToDecimals(
+          macdData.MACD ?? 0,
+          6
+        );
+        macdByLength[indx][`signal-${lengthName}`] = roundToDecimals(
+          macdData.signal ?? 0,
+          6
+        );
+        macdByLength[indx][`histogram-${lengthName}`] = roundToDecimals(
+          macdData.histogram ?? 0,
+          6
+        );
 
         macdDataCount = macdDataCount + 1;
       }
@@ -143,7 +154,7 @@ export function getSmaByOhlcv(ohlcv: OHLCVType[], currentTf: string) {
          */
         const smaData = smaVal.data[smaDataCount];
 
-        smaByPeriod[indx][`sma-${periodName}`] = smaData;
+        smaByPeriod[indx][`sma-${periodName}`] = roundToDecimals(smaData, 4);
 
         smaDataCount = smaDataCount + 1;
       }
@@ -190,7 +201,7 @@ export function getEmaByOhlcv(ohlcv: OHLCVType[], currentTf: string) {
          */
         const emaData = emaVal.data[emaDataCount];
 
-        emaByPeriod[indx][`ema-${periodName}`] = emaData;
+        emaByPeriod[indx][`ema-${periodName}`] = roundToDecimals(emaData, 4);
 
         emaDataCount = emaDataCount + 1;
       }
@@ -198,4 +209,66 @@ export function getEmaByOhlcv(ohlcv: OHLCVType[], currentTf: string) {
   });
 
   return emaByPeriod;
+}
+
+export function getBollByOhlcv(ohlcv: OHLCVType[], currentTf: string) {
+  const bollArrObj = calculateBoll(ohlcv, currentTf);
+
+  /**
+   * attempts to add {"lower-boll-20-2": -30.12} structure in ohlcvData
+   *
+   * I just separated it so ohlcvData could retain its true type
+   */
+  const bollByLength: { [key: string]: number | string | undefined }[] = [];
+
+  // loop each boll length to use it as name
+  bollArrObj.forEach((bollVal) => {
+    // for example: 27 - 2 - 1 = 0-24 (25 in real number)
+    const bollOffset = ohlcv.length - bollVal.data.length - 1;
+
+    // to access the actual boll data, start from 0
+    let bollDataCount = 0;
+
+    ohlcv.forEach((_, indx) => {
+      const lengthName = `boll-${bollVal.period}-${bollVal.stdDev}`;
+      bollByLength[indx] = {
+        ...bollByLength[indx],
+        [`lower-${lengthName}`]: 0,
+        [`middle-${lengthName}`]: 0,
+        [`upper-${lengthName}`]: 0,
+      };
+
+      // put undefined on the ones that are offset by boll, beyond 24 has a real boll value
+      if (indx <= bollOffset) {
+        bollByLength[indx][`lower-${lengthName}`] = undefined;
+        bollByLength[indx][`middle-${lengthName}`] = undefined;
+        bollByLength[indx][`upper-${lengthName}`] = undefined;
+      } else {
+        /**
+         * to access the index of bollData that is shorter than ohlcv
+         *
+         * bollData array has 2 (0-1) length, ohlcv has 27 (0-26), offset is 25 (0-24)
+         *
+         */
+        const bollData = bollVal.data[bollDataCount];
+
+        bollByLength[indx][`lower-${lengthName}`] = roundToDecimals(
+          bollData.lower,
+          4
+        );
+        bollByLength[indx][`middle-${lengthName}`] = roundToDecimals(
+          bollData.middle,
+          4
+        );
+        bollByLength[indx][`upper-${lengthName}`] = roundToDecimals(
+          bollData.upper,
+          4
+        );
+
+        bollDataCount = bollDataCount + 1;
+      }
+    });
+  });
+
+  return bollByLength;
 }

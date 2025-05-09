@@ -1,21 +1,22 @@
 import {
+  BBPeriodType,
   EMAPeriodType,
   MACDLengthType,
   RSIPeriodType,
   SMAPeriodType,
-} from "./types/price.type.js";
+} from "./types/indicators.type.js";
 
 export const EXCHANGE = "okx";
 export const OHLCV_TIMEFRAME_SETTINGS = [
-  {
-    tf: "15m",
-    candles: 40, // 10 hours
-    candlesForOffset: 250, // get much data to calculate indicators for the real candles
-  },
+  // {
+  //   tf: "15m",
+  //   candles: 40, // 10 hours
+  //   candlesForOffset: 250,
+  // },
   {
     tf: "1h",
     candles: 48, // 2 days
-    candlesForOffset: 250,
+    candlesForOffset: 250, // get much data to calculate indicators for the real candles
   },
   {
     tf: "4h",
@@ -78,5 +79,13 @@ export const EMA_PERIODS: EMAPeriodType[] = [
   {
     period: 20,
     tfs: ["1h", "4h", "1d"],
+  },
+];
+
+export const BB_PERIODS: BBPeriodType[] = [
+  {
+    period: 20,
+    stdDev: 2,
+    tfs: ["15m", "1h", "4h", "1d"],
   },
 ];
